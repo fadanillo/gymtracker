@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Прогрес</title>
+<title>Progress</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Guntur:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Firebase (compat SDK, no build step needed) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/12.15.0/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/12.15.0/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/12.15.0/firebase-firestore-compat.min.js"></script>
 <style>
   :root{
     --bg:#131319;
@@ -24,11 +28,11 @@
     font-size:16px;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;height:100%;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Hind Guntur',sans-serif;height:100%;}
   body{overscroll-behavior-y:none;}
   #app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;}
 
-  .h-title{font-family:'Unbounded',sans-serif;font-weight:600;letter-spacing:0.02em;}
+  .h-title{font-family:'Hind Guntur',sans-serif;font-weight:600;letter-spacing:0.02em;}
   .mono{font-family:'JetBrains Mono',monospace;}
 
   /* ---------- Header ---------- */
@@ -43,9 +47,9 @@
     display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--text);
   }
   .back-btn svg{width:18px;height:18px;}
-  .header-title{font-family:'Unbounded',sans-serif;font-size:1.35rem;font-weight:600;flex:1;letter-spacing:0.01em;
+  .header-title{font-family:'Hind Guntur',sans-serif;font-size:1.35rem;font-weight:600;flex:1;letter-spacing:0.01em;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .header-sub{font-size:0.78rem;color:var(--text-dim);font-weight:400;font-family:'Manrope',sans-serif;letter-spacing:0;}
+  .header-sub{font-size:0.78rem;color:var(--text-dim);font-weight:400;font-family:'Hind Guntur',sans-serif;letter-spacing:0;}
 
   /* ---------- Streak badge ---------- */
   .streak-badge{
@@ -65,7 +69,7 @@
 
   /* ---------- Group grid (home) ---------- */
   .intro{padding:4px 0 20px;}
-  .intro h1{font-family:'Unbounded',sans-serif;font-size:1.9rem;margin:0 0 4px;font-weight:700;}
+  .intro h1{font-family:'Hind Guntur',sans-serif;font-size:1.9rem;margin:0 0 4px;font-weight:700;}
   .intro p{margin:0;color:var(--text-dim);font-size:0.9rem;}
 
   .today-card{
@@ -76,7 +80,7 @@
     display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .today-info{flex:1;min-width:0;}
   .today-top-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
-  .today-streak{font-family:'Unbounded',sans-serif;font-size:0.95rem;font-weight:700;white-space:nowrap;}
+  .today-streak{font-family:'Hind Guntur',sans-serif;font-size:0.95rem;font-weight:700;white-space:nowrap;}
   .today-week-count{font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;white-space:nowrap;}
   .today-mark-btn{
     flex:none;width:40px;height:40px;border-radius:12px;border:none;background:var(--accent);color:#fff;
@@ -94,7 +98,7 @@
   .group-card:active{transform:scale(0.97);}
   .group-icon-chip{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;}
   .group-icon-chip svg{width:24px;height:24px;}
-  .group-card .g-name{font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:600;}
+  .group-card .g-name{font-family:'Hind Guntur',sans-serif;font-size:1rem;font-weight:600;}
   .group-card .g-count{color:var(--text-faint);font-size:0.75rem;font-family:'JetBrains Mono',monospace;margin-top:2px;}
 
   /* ---------- Exercise grid ---------- */
@@ -106,7 +110,7 @@
   .ex-card .ex-photo{flex:1;background:var(--surface-2);display:flex;align-items:center;justify-content:center;overflow:hidden;}
   .ex-card .ex-photo img{width:100%;height:100%;object-fit:cover;display:block;}
   .ex-card .ex-photo svg{width:34px;height:34px;stroke:var(--text-faint);}
-  .ex-card .ex-name{padding:9px 10px;font-size:0.85rem;font-weight:600;font-family:'Manrope',sans-serif;
+  .ex-card .ex-name{padding:9px 10px;font-size:0.85rem;font-weight:600;font-family:'Hind Guntur',sans-serif;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-top:1px solid var(--border);}
 
   .add-card{
@@ -124,7 +128,7 @@
     overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;}
   .ex-hero-photo img{width:100%;height:100%;object-fit:cover;}
   .ex-hero-photo svg{width:30px;height:30px;stroke:var(--text-faint);}
-  .ex-hero-info h2{font-family:'Unbounded',sans-serif;font-size:1.3rem;margin:0 0 4px;font-weight:600;}
+  .ex-hero-info h2{font-family:'Hind Guntur',sans-serif;font-size:1.3rem;margin:0 0 4px;font-weight:600;}
   .ex-hero-info .last-log{font-size:0.78rem;color:var(--text-dim);}
   .icon-btn-row{display:flex;gap:8px;margin-top:8px;}
   .icon-btn{
@@ -163,7 +167,7 @@
 
   .primary-btn{
     width:100%;padding:15px;border-radius:14px;border:none;background:var(--accent);color:#fff;
-    font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;
+    font-family:'Hind Guntur',sans-serif;font-size:1rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;
     margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;
   }
   .primary-btn:active{background:#e64d2b;}
@@ -208,12 +212,12 @@
   .modal-overlay.center .modal-sheet{border-radius:20px;max-width:400px;}
   @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
   .modal-handle{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 18px;}
-  .modal-title{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:600;margin:0 0 18px;}
+  .modal-title{font-family:'Hind Guntur',sans-serif;font-size:1.2rem;font-weight:600;margin:0 0 18px;}
   .input-group{margin-bottom:16px;}
   .input-group label{display:block;font-size:0.78rem;color:var(--text-dim);margin-bottom:7px;font-weight:600;}
   .text-input{
     width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:12px 14px;
-    color:var(--text);font-size:0.95rem;font-family:'Manrope',sans-serif;
+    color:var(--text);font-size:0.95rem;font-family:'Hind Guntur',sans-serif;
   }
   .text-input:focus{outline:none;border-color:var(--accent);}
   .photo-drop{
@@ -235,7 +239,7 @@
     display:flex;align-items:center;justify-content:center;margin-bottom:14px;transition:box-shadow .4s ease;}
   .streak-hero .big-badge svg{width:64px;height:64px;}
   .streak-hero .big-badge .emoji{font-size:56px;}
-  .streak-hero .streak-num{font-family:'Unbounded',sans-serif;font-size:1.6rem;font-weight:700;}
+  .streak-hero .streak-num{font-family:'Hind Guntur',sans-serif;font-size:1.6rem;font-weight:700;}
   .streak-hero .streak-label{color:var(--text-dim);font-size:0.85rem;margin-top:2px;}
 
   .goal-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);
@@ -270,19 +274,67 @@
   .flame-glow{animation:flicker 1.4s ease-in-out infinite;}
 
   ::-webkit-scrollbar{width:0;height:0;}
+
+  /* ---------- Auth screen ---------- */
+  .auth-wrap{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px 26px;max-width:420px;margin:0 auto;}
+  .auth-logo{width:64px;height:64px;border-radius:20px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin-bottom:22px;}
+  .auth-logo svg{width:32px;height:32px;}
+  .auth-wrap h1{font-family:'Hind Guntur',sans-serif;font-size:1.7rem;font-weight:700;margin:0 0 6px;}
+  .auth-wrap .auth-sub{color:var(--text-dim);font-size:0.88rem;margin:0 0 26px;line-height:1.5;}
+  .auth-tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:20px;}
+  .auth-tab{flex:1;text-align:center;padding:9px 0;border-radius:9px;font-size:0.85rem;font-weight:600;cursor:pointer;color:var(--text-dim);}
+  .auth-tab.active{background:var(--accent);color:#fff;}
+  .auth-error{background:rgba(255,97,97,0.12);border:1px solid var(--danger);color:var(--danger);border-radius:10px;
+    padding:10px 12px;font-size:0.8rem;margin-bottom:14px;display:none;}
+  .auth-error.show{display:block;}
+  .auth-hint{font-size:0.72rem;color:var(--text-faint);margin-top:18px;line-height:1.5;text-align:center;}
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
+/* ===================== FIREBASE CONFIG ===================== */
+// 1) Go to https://console.firebase.google.com -> Create project
+// 2) Build -> Authentication -> Sign-in method -> enable "Email/Password"
+// 3) Build -> Firestore Database -> Create database (start in production mode)
+// 4) Project settings (gear icon) -> General -> "Your apps" -> Add app -> Web (</>) -> copy the config below
+// 5) Firestore -> Rules -> paste:
+//    rules_version = '2';
+//    service cloud.firestore {
+//      match /databases/{database}/documents {
+//        match /users/{uid} {
+//          allow read, write: if request.auth != null && request.auth.uid == uid;
+//        }
+//        match /users/{uid}/exercises/{exId} {
+//          allow read, write: if request.auth != null && request.auth.uid == uid;
+//        }
+//      }
+//    }
+const firebaseConfig = {
+  apiKey: "AIzaSyBz6N66NIuxvFtOTFmc6n0FIsvXCEhE3uQ",
+  authDomain: "gymtrackerdoit.firebaseapp.com",
+  projectId: "gymtrackerdoit",
+  storageBucket: "gymtrackerdoit.firebasestorage.app",
+  messagingSenderId: "975765274840",
+  appId: "1:975765274840:web:d29b8d9fb0d25b0d29d7ad"
+};
+const FIREBASE_CONFIGURED = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
+const FIREBASE_SDK_LOADED = typeof firebase !== 'undefined';
+let fbApp=null, auth=null, db=null, currentUser=null;
+if(FIREBASE_CONFIGURED && FIREBASE_SDK_LOADED){
+  fbApp = firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+}
+
 /* ===================== DATA / CONSTANTS ===================== */
 const GROUPS = [
-  {id:'chest', name:'Груди', color:'#ff5a36', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 10v28"/><path d="M23 12c-2-4-8-6-13-3-5 3-6 10-2 15 3 4 9 7 14 8 1-6 1-14 1-20z"/><path d="M25 12c2-4 8-6 13-3 5 3 6 10 2 15-3 4-9 7-14 8-1-6-1-14-1-20z"/></svg>`},
-  {id:'back', name:'Спина', color:'#4aa8ff', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8v32"/><path d="M24 10c-6 2-16 2-19 8 4 2 9 1 13-1-3 6-9 9-10 15 6 0 12-4 16-10"/><path d="M24 10c6 2 16 2 19 8-4 2-9 1-13-1 3 6 9 9 10 15-6 0-12-4-16-10"/></svg>`},
-  {id:'shoulders', name:'Плечі', color:'#ffb35a', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="7"/><circle cx="36" cy="18" r="7"/><path d="M5 34c2-6 5-9 7-9M43 34c-2-6-5-9-7-9M19 18h10"/></svg>`},
-  {id:'arms', name:'Руки', color:'#4ade80', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 40 24 26"/><circle cx="8" cy="42" r="5"/><path d="M24 26c-4-2-6-8-2-13 3-4 9-4 12-1 4 4 2 10-2 13" fill="none"/><circle cx="38" cy="10" r="6"/></svg>`},
-  {id:'legs', name:'Ноги', color:'#c084fc', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="6" width="8" height="24" rx="3"/><rect x="26" y="6" width="8" height="24" rx="3"/><path d="M14 26v6c0 2-1 3-3 4h9v-8M34 26v6c0 2 1 3 3 4h-9v-8"/></svg>`},
+  {id:'chest', name:'Chest', color:'#ff5a36', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 10v28"/><path d="M23 12c-2-4-8-6-13-3-5 3-6 10-2 15 3 4 9 7 14 8 1-6 1-14 1-20z"/><path d="M25 12c2-4 8-6 13-3 5 3 6 10 2 15-3 4-9 7-14 8-1-6-1-14-1-20z"/></svg>`},
+  {id:'back', name:'Back', color:'#4aa8ff', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8v32"/><path d="M24 10c-6 2-16 2-19 8 4 2 9 1 13-1-3 6-9 9-10 15 6 0 12-4 16-10"/><path d="M24 10c6 2 16 2 19 8-4 2-9 1-13-1 3 6 9 9 10 15-6 0-12-4-16-10"/></svg>`},
+  {id:'shoulders', name:'Shoulders', color:'#ffb35a', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="7"/><circle cx="36" cy="18" r="7"/><path d="M5 34c2-6 5-9 7-9M43 34c-2-6-5-9-7-9M19 18h10"/></svg>`},
+  {id:'arms', name:'Arms', color:'#4ade80', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 40 24 26"/><circle cx="8" cy="42" r="5"/><path d="M24 26c-4-2-6-8-2-13 3-4 9-4 12-1 4 4 2 10-2 13" fill="none"/><circle cx="38" cy="10" r="6"/></svg>`},
+  {id:'legs', name:'Legs', color:'#c084fc', icon:`<svg viewBox="0 0 48 48" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="6" width="8" height="24" rx="3"/><rect x="26" y="6" width="8" height="24" rx="3"/><path d="M14 26v6c0 2-1 3-3 4h9v-8M34 26v6c0 2 1 3 3 4h-9v-8"/></svg>`},
 ];
 
 const ICONS = {
@@ -294,12 +346,13 @@ const ICONS = {
   x:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
   chart:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9M10 21V3M17 21v-7"/></svg>`,
   chartBig:`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 42V18M18 42V6M30 42v-22M42 42v-14"/></svg>`,
+  dumbbell:`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20v8M11 16v16M37 16v16M42 20v8M11 24h26"/></svg>`,
 };
 
-const STAGE_LABELS = ["Курча ще спить","Перший підхід","Розігрів","Набираєш форму","Стабільний ритм",
-  "Впевнена рука","Сила росте","З'являється рельєф","Накачана рука","Вени видно","Вибухова сила","У вогні!"];
+const STAGE_LABELS = ["Chicken still asleep","First set","Warming up","Getting in shape","Steady rhythm",
+  "Confident arm","Strength rising","Definition appearing","Pumped arm","Veins showing","Explosive power","On fire!"];
 
-/* ===================== STORAGE ===================== */
+/* ===================== STORAGE (Firebase Firestore, per user) ===================== */
 const DEFAULTS = {
   exercises: {chest:[], back:[], shoulders:[], arms:[], legs:[]},
   logs: {},
@@ -308,43 +361,78 @@ const DEFAULTS = {
 };
 let DB = JSON.parse(JSON.stringify(DEFAULTS));
 
-async function loadKey(key, fallback){
-  try{
-    const r = await window.storage.get(key, false);
-    if(r && r.value) return JSON.parse(r.value);
-    return fallback;
-  }catch(e){ return fallback; }
+// local cache: instant redisplay + offline fallback only (source of truth is Firestore)
+function cacheLocally(){
+  try{ localStorage.setItem('gymtracker:cache', JSON.stringify(DB)); }catch(e){}
 }
-async function saveKey(key, value, attempt=1){
+function loadLocalCache(){
   try{
-    const res = await window.storage.set(key, JSON.stringify(value), false);
-    if(!res) throw new Error('empty response');
+    const raw = localStorage.getItem('gymtracker:cache');
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+
+function metaRef(){ return db.collection('users').doc(currentUser.uid); }
+function exercisesCol(){ return db.collection('users').doc(currentUser.uid).collection('exercises'); }
+
+async function cloudLoadAll(){
+  const cached = loadLocalCache();
+  if(cached) DB = cached; // instant paint while we fetch fresh data
+  try{
+    const [metaSnap, exSnap] = await Promise.all([ metaRef().get(), exercisesCol().get() ]);
+    const meta = metaSnap.exists ? metaSnap.data() : {};
+    const freshExercises = {chest:[], back:[], shoulders:[], arms:[], legs:[]};
+    const freshLogs = {};
+    exSnap.forEach(docSnap=>{
+      const d = docSnap.data();
+      const exObj = {id:docSnap.id, name:d.name, photo:d.photo||null};
+      if(!freshExercises[d.groupId]) freshExercises[d.groupId] = [];
+      freshExercises[d.groupId].push(exObj);
+      freshLogs[docSnap.id] = d.logs || [];
+    });
+    DB.exercises = freshExercises;
+    DB.logs = freshLogs;
+    DB.trainingDays = meta.trainingDays || [];
+    DB.settings = {weeklyGoal: meta.weeklyGoal!==undefined ? meta.weeklyGoal : 4};
+    cacheLocally();
+  }catch(e){
+    console.error('cloud load failed', e);
+    if(cached){ showToast('Offline — showing your last saved data.'); }
+    else { showToast('Could not load your data. Check your connection.'); }
+  }
+}
+
+async function cloudSaveExercise(ex, groupId){
+  cacheLocally();
+  try{
+    await exercisesCol().doc(ex.id).set({
+      groupId,
+      name: ex.name,
+      photo: ex.photo || null,
+      logs: DB.logs[ex.id] || []
+    });
     return true;
   }catch(e){
-    if(attempt<3){
-      await new Promise(r=>setTimeout(r, 400*attempt));
-      return saveKey(key, value, attempt+1);
-    }
-    console.error('storage save failed', key, e);
-    showToast('Не вдалося зберегти дані. Перевір з\'єднання.');
+    console.error('save exercise failed', e);
+    showToast('Could not sync to the cloud. Saved on this device only.');
     return false;
   }
 }
-async function loadAll(){
-  const [ex, wd, st] = await Promise.all([
-    loadKey('exercises-by-group', DEFAULTS.exercises),
-    loadKey('workout-data', {logs:DEFAULTS.logs, trainingDays:DEFAULTS.trainingDays}),
-    loadKey('settings', DEFAULTS.settings),
-  ]);
-  DB.exercises = ex; DB.logs = wd.logs||{}; DB.trainingDays = wd.trainingDays||[]; DB.settings = st;
+async function cloudDeleteExercise(exId){
+  cacheLocally();
+  try{ await exercisesCol().doc(exId).delete(); return true; }
+  catch(e){ console.error('delete failed', e); showToast('Could not delete from the cloud.'); return false; }
 }
-function persistExercises(){ return saveKey('exercises-by-group', DB.exercises); }
-function persistWorkoutData(){ return saveKey('workout-data', {logs:DB.logs, trainingDays:DB.trainingDays}); }
-
-let __settingsSaveTimer = null;
-function persistSettings(){
-  clearTimeout(__settingsSaveTimer);
-  __settingsSaveTimer = setTimeout(()=>{ saveKey('settings', DB.settings); }, 450);
+async function cloudSaveMeta(){
+  cacheLocally();
+  try{
+    await metaRef().set({weeklyGoal: DB.settings.weeklyGoal, trainingDays: DB.trainingDays}, {merge:true});
+    return true;
+  }catch(e){
+    console.error('save meta failed', e);
+    showToast('Could not sync to the cloud. Saved on this device only.');
+    return false;
+  }
 }
 
 function showToast(msg){
@@ -357,7 +445,7 @@ function showToast(msg){
   }
   const el = document.createElement('div');
   el.textContent = msg;
-  el.style.cssText = 'background:#252631;border:1px solid #33343f;color:#f2f0ea;font-family:Manrope,sans-serif;font-size:0.82rem;padding:10px 16px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.4);max-width:90vw;';
+  el.style.cssText = "background:#252631;border:1px solid #33343f;color:#f2f0ea;font-family:'Hind Guntur',sans-serif;font-size:0.82rem;padding:10px 16px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.4);max-width:90vw;";
   host.appendChild(el);
   setTimeout(()=>{ el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(), 300); }, 3200);
 }
@@ -372,7 +460,7 @@ function uid(){ return Math.random().toString(36).slice(2,10)+Date.now().toStrin
 function todayISO(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(iso){
   const d = new Date(iso+'T00:00:00');
-  return d.toLocaleDateString('uk-UA', {day:'2-digit', month:'short'});
+  return d.toLocaleDateString('en-US', {day:'2-digit', month:'short'});
 }
 function mondayOf(iso){
   const d = new Date(iso+'T00:00:00');
@@ -551,11 +639,11 @@ function renderHome(){
   const totalExercises = GROUPS.reduce((s,g)=>s+DB.exercises[g.id].length,0);
 
   return `
-  ${renderHeader({title:'Прогрес', showBack:false})}
+  ${renderHeader({title:'Progress', showBack:false})}
   <main>
     <div class="intro">
-      <h1>Твій зал</h1>
-      <p>${totalExercises===0 ? "Обери групу м'язів і додай першу вправу" : "Обери групу м'язів, щоб записати тренування"}</p>
+      <h1>Your Gym</h1>
+      <p>${totalExercises===0 ? "Pick a muscle group and add your first exercise" : "Pick a muscle group to log a workout"}</p>
     </div>
 
     <div class="today-card">
@@ -563,7 +651,7 @@ function renderHome(){
       <div class="today-info">
         <div class="today-top-row">
           <span class="today-streak">${info.streak} ${weekWord(info.streak)}</span>
-          <span class="today-week-count">${info.thisWeekCount}/${goal} цього тижня</span>
+          <span class="today-week-count">${info.thisWeekCount}/${goal} this week</span>
         </div>
         <div class="wp-bar" style="margin-top:8px;"><div class="wp-bar-fill" style="width:${progressPct}%"></div></div>
       </div>
@@ -580,7 +668,7 @@ function renderHome(){
           </div>
           <div>
             <div class="g-name">${g.name}</div>
-            <div class="g-count">${DB.exercises[g.id].length} вправ${plural(DB.exercises[g.id].length)}</div>
+            <div class="g-count">${DB.exercises[g.id].length} exercises</div>
           </div>
         </div>
       `).join('')}
@@ -596,7 +684,7 @@ function renderGroup(){
   const g = GROUPS.find(x=>x.id===state.groupId);
   const list = DB.exercises[state.groupId] || [];
   return `
-  ${renderHeader({title:g.name, sub:`${list.length} вправ у списку`, showBack:true})}
+  ${renderHeader({title:g.name, sub:`${list.length} exercises in the list`, showBack:true})}
   <main>
     <div class="ex-grid">
       ${list.map(e=>`
@@ -607,7 +695,7 @@ function renderGroup(){
       `).join('')}
       <div class="add-card" data-action="add-exercise">
         ${ICONS.plus}
-        <span>Додати вправу</span>
+        <span>Add exercise</span>
       </div>
     </div>
   </main>`;
@@ -621,13 +709,13 @@ function renderExercise(){
   const lastLog = logs[0];
 
   return `
-  ${renderHeader({title:'Вправа', showBack:true})}
+  ${renderHeader({title:'Exercise', showBack:true})}
   <main>
     <div class="ex-hero">
       <div class="ex-hero-photo">${ex.photo?`<img src="${ex.photo}">`:ICONS.photo}</div>
       <div class="ex-hero-info">
         <h2>${escapeHtml(ex.name)}</h2>
-        <div class="last-log">${lastLog ? `Востаннє: ${fmtDate(lastLog.date)}, ${lastLog.sets.length} сет${lastLog.sets.length===1?'':lastLog.sets.length<5?'и':'ів'}` : 'Ще немає записів'}</div>
+        <div class="last-log">${lastLog ? `Last: ${fmtDate(lastLog.date)}, ${lastLog.sets.length} set${lastLog.sets.length===1?'':'s'}` : 'No entries yet'}</div>
         <div class="icon-btn-row">
           <div class="icon-btn" data-action="edit-exercise">${ICONS.edit}</div>
           <div class="icon-btn" data-action="delete-exercise">${ICONS.trash}</div>
@@ -636,8 +724,8 @@ function renderExercise(){
     </div>
 
     <div class="tabs">
-      <div class="tab ${state.exTab==='log'?'active':''}" data-action="ex-tab" data-tab="log">Записати сети</div>
-      <div class="tab ${state.exTab==='history'?'active':''}" data-action="ex-tab" data-tab="history">Історія прогресу</div>
+      <div class="tab ${state.exTab==='log'?'active':''}" data-action="ex-tab" data-tab="log">Log sets</div>
+      <div class="tab ${state.exTab==='history'?'active':''}" data-action="ex-tab" data-tab="history">Progress history</div>
     </div>
 
     ${state.exTab==='log' ? renderLogTab(ex) : renderHistoryTab(ex, logs)}
@@ -661,7 +749,7 @@ function renderLogTab(ex){
           <div class="set-num">${i+1}</div>
           <div class="set-fields">
             <div class="field">
-              <label>Повторення</label>
+              <label>Reps</label>
               <div class="stepper">
                 <button data-action="step-reps" data-i="${i}" data-d="-1">−</button>
                 <input type="number" inputmode="numeric" min="0" data-role="reps" data-i="${i}" value="${row.reps}" placeholder="0">
@@ -669,7 +757,7 @@ function renderLogTab(ex){
               </div>
             </div>
             <div class="field">
-              <label>Вага, кг</label>
+              <label>Weight, kg</label>
               <div class="stepper">
                 <button data-action="step-weight" data-i="${i}" data-d="-2.5">−</button>
                 <input type="number" inputmode="decimal" min="0" step="0.5" data-role="weight" data-i="${i}" value="${row.weight}" placeholder="0">
@@ -679,7 +767,7 @@ function renderLogTab(ex){
           </div>
         </div>
       `).join('')}
-      <button class="primary-btn" data-action="save-log">Зберегти тренування</button>
+      <button class="primary-btn" data-action="save-log">Save workout</button>
     </div>
   `;
 }
@@ -689,7 +777,7 @@ function renderHistoryTab(ex, logs){
     return `
       <div class="empty-state">
         ${ICONS.chartBig}
-        <p>Ще немає даних для графіка.<br>Запиши перше тренування, і тут з'явиться прогрес.</p>
+        <p>No data for the chart yet.<br>Log your first workout and progress will show up here.</p>
       </div>`;
   }
 
@@ -739,9 +827,9 @@ function renderHistoryTab(ex, logs){
 
   return `
     <div class="chart-stats">
-      <div class="stat-pill"><div class="num">${best}<span style="font-size:0.6em">кг</span></div><div class="lbl">Максимум</div></div>
-      <div class="stat-pill"><div class="num">${lastEntry.top}<span style="font-size:0.6em">кг</span></div><div class="lbl">Останнє</div></div>
-      <div class="stat-pill"><div class="num">${points.length}</div><div class="lbl">Тренувань</div></div>
+      <div class="stat-pill"><div class="num">${best}<span style="font-size:0.6em">kg</span></div><div class="lbl">Best</div></div>
+      <div class="stat-pill"><div class="num">${lastEntry.top}<span style="font-size:0.6em">kg</span></div><div class="lbl">Last</div></div>
+      <div class="stat-pill"><div class="num">${points.length}</div><div class="lbl">Workouts</div></div>
     </div>
     <div class="chart-wrap" style="position:relative;">
       <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;overflow:visible;">
@@ -764,7 +852,7 @@ function renderHistoryTab(ex, logs){
         <div class="log-item">
           <div class="l-date">${fmtDate(l.date)}</div>
           <div class="l-sets">
-            ${l.sets.map((s,i)=>`<span class="l-set-chip">Сет ${i+1}: <b>${s.reps}</b>×<b>${s.weight}</b>кг</span>`).join('')}
+            ${l.sets.map((s,i)=>`<span class="l-set-chip">Set ${i+1}: <b>${s.reps}</b>×<b>${s.weight}</b>kg</span>`).join('')}
           </div>
         </div>
       `).join('')}
@@ -790,21 +878,21 @@ function renderExerciseModal(isEdit){
   <div class="modal-overlay" data-action="close-modal-bg">
     <div class="modal-sheet" data-stop="1">
       <div class="modal-handle"></div>
-      <div class="modal-title">${isEdit?'Редагувати вправу':'Нова вправа'}</div>
+      <div class="modal-title">${isEdit?'Edit exercise':'New exercise'}</div>
       <div class="input-group">
-        <label>Назва вправи</label>
-        <input class="text-input" id="ex-name-input" placeholder="Наприклад, Жим лежачи" value="${escapeHtml(name)}">
+        <label>Exercise name</label>
+        <input class="text-input" id="ex-name-input" placeholder="e.g. Bench press" value="${escapeHtml(name)}">
       </div>
       <div class="input-group">
-        <label>Фото</label>
+        <label>Photo</label>
         <div class="photo-drop" data-action="pick-photo">
-          ${photo ? `<img src="${photo}">` : `${ICONS.photo}<span>Натисни, щоб додати фото</span>`}
+          ${photo ? `<img src="${photo}">` : `${ICONS.photo}<span>Tap to add a photo</span>`}
         </div>
         <input type="file" accept="image/*" id="photo-input" style="display:none">
       </div>
       <div class="modal-actions">
-        <button class="primary-btn secondary" data-action="close-modal" style="flex:1">Скасувати</button>
-        <button class="primary-btn" data-action="${isEdit?'save-edit-exercise':'save-new-exercise'}" style="flex:1">Зберегти</button>
+        <button class="primary-btn secondary" data-action="close-modal" style="flex:1">Cancel</button>
+        <button class="primary-btn" data-action="${isEdit?'save-edit-exercise':'save-new-exercise'}" style="flex:1">Save</button>
       </div>
     </div>
   </div>`;
@@ -824,13 +912,13 @@ function renderStreakModal(){
       <div class="modal-handle"></div>
       <div class="streak-hero">
         <div class="big-badge">${armBadgeSVG(level, 62)}</div>
-        <div class="streak-num">${info.streak} ${weekWord(info.streak)} поспіль</div>
+        <div class="streak-num">${info.streak} ${weekWord(info.streak)} streak</div>
         <div class="streak-label">${label}</div>
       </div>
 
       <div class="week-progress">
         <div class="wp-top">
-          <span>Цього тижня</span>
+          <span>This week</span>
           <span class="wp-count">${info.thisWeekCount} / ${goal}</span>
         </div>
         <div class="wp-bar"><div class="wp-bar-fill" style="width:${progressPct}%"></div></div>
@@ -841,13 +929,13 @@ function renderStreakModal(){
       </div>
 
       <button class="primary-btn" data-action="mark-today" ${alreadyToday?'disabled':''}>
-        ${alreadyToday ? '✓ Сьогодні вже зараховано' : 'Я потренувався сьогодні'}
+        ${alreadyToday ? '✓ Today already counted' : 'I worked out today'}
       </button>
 
       <div class="goal-row" style="margin-top:16px;">
         <div class="g-text">
-          <div class="g-title">Ціль на тиждень</div>
-          <div class="g-hint">Скільки тренувань для заліку тижня</div>
+          <div class="g-title">Weekly goal</div>
+          <div class="g-hint">Workouts needed to complete a week</div>
         </div>
         <div class="goal-stepper">
           <button data-action="goal-step" data-d="-1">−</button>
@@ -855,17 +943,19 @@ function renderStreakModal(){
           <button data-action="goal-step" data-d="1">+</button>
         </div>
       </div>
-      <div class="info-tip">Тиждень зараховується в стрік, якщо кількість тренувань за тиждень (Пн–Нд) досягає цілі. Якщо ні — стрік скидається на 0.</div>
+      <div class="info-tip">A week counts toward your streak if your number of workouts that week (Mon–Sun) meets your goal. Otherwise the streak resets to 0.</div>
+      ${currentUser ? `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+          <span style="font-size:0.78rem;color:var(--text-dim);">${escapeHtml(currentUser.email||'')}</span>
+          <span style="font-size:0.78rem;color:var(--danger);font-weight:600;cursor:pointer;" data-action="sign-out">Sign out</span>
+        </div>
+      ` : ''}
     </div>
   </div>`;
 }
 function weekWord(n){
   const m = n%100;
-  if(m>=11 && m<=14) return 'тижнів';
-  const l = n%10;
-  if(l===1) return 'тиждень';
-  if(l>=2 && l<=4) return 'тижні';
-  return 'тижнів';
+  return n===1 ? 'week' : 'weeks';
 }
 
 /* ===================== EVENT HANDLERS ===================== */
@@ -919,10 +1009,10 @@ async function onAction(e){
   else if(action==='edit-exercise'){ modal={type:'edit-exercise'}; pendingPhoto=null; render(); }
   else if(action==='delete-exercise'){
     const found = getExercise(state.exerciseId);
-    if(found && confirm(`Видалити вправу "${found.ex.name}"?`)){
+    if(found && confirm(`Delete exercise "${found.ex.name}"?`)){
       DB.exercises[found.groupId] = DB.exercises[found.groupId].filter(x=>x.id!==state.exerciseId);
       delete DB.logs[state.exerciseId];
-      persistExercises(); persistWorkoutData();
+      cloudDeleteExercise(state.exerciseId);
       state.screen='group'; render();
     }
   }
@@ -936,7 +1026,7 @@ async function onAction(e){
     if(!name){ shake('ex-name-input'); return; }
     const newEx = {id:uid(), name, photo: pendingPhoto||null};
     DB.exercises[state.groupId].push(newEx);
-    persistExercises();
+    cloudSaveExercise(newEx, state.groupId);
     modal=null; pendingPhoto=null; render();
   }
   else if(action==='save-edit-exercise'){
@@ -946,7 +1036,7 @@ async function onAction(e){
     const found = getExercise(state.exerciseId);
     found.ex.name = name;
     if(pendingPhoto!==null) found.ex.photo = pendingPhoto;
-    persistExercises();
+    cloudSaveExercise(found.ex, found.groupId);
     modal=null; pendingPhoto=null; render();
   }
 
@@ -967,14 +1057,16 @@ async function onAction(e){
     const validSets = draft
       .map(r=>({reps:parseFloat(r.reps)||0, weight:parseFloat(r.weight)||0}))
       .filter(r=>r.reps>0);
-    if(validSets.length===0){ alert('Заповни хоча б один сет (повторення).'); return; }
+    if(validSets.length===0){ alert('Fill in at least one set (reps).'); return; }
     const today = todayISO();
     const existingIdx = (DB.logs[ex.id]||[]).findIndex(l=>l.date===today);
     if(!DB.logs[ex.id]) DB.logs[ex.id] = [];
     if(existingIdx>=0) DB.logs[ex.id][existingIdx] = {date:today, sets:validSets};
     else DB.logs[ex.id].push({date:today, sets:validSets});
     if(!DB.trainingDays.includes(today)) DB.trainingDays.push(today);
-    persistWorkoutData();
+    const found = getExercise(ex.id);
+    cloudSaveExercise(ex, found.groupId);
+    cloudSaveMeta();
     delete window.__draftSets[ex.id];
     state.exTab='history';
     render();
@@ -988,15 +1080,20 @@ async function onAction(e){
     const today = todayISO();
     if(!DB.trainingDays.includes(today)){
       DB.trainingDays.push(today);
-      persistWorkoutData();
+      cloudSaveMeta();
       render();
     }
   }
   else if(action==='goal-step'){
     const d = parseInt(el.dataset.d);
     DB.settings.weeklyGoal = Math.max(0, Math.min(7, DB.settings.weeklyGoal + d));
-    persistSettings();
+    cloudSaveMeta();
     render();
+  }
+  else if(action==='sign-out'){
+    if(confirm('Sign out of your account on this device?')){
+      auth.signOut();
+    }
   }
 }
 
@@ -1028,15 +1125,122 @@ document.addEventListener('click', e=>{
   const wrapRect = tipHost.parentElement.getBoundingClientRect();
   tipHost.innerHTML = `<div class="tooltip" style="left:${px-wrapRect.left}px; top:${py-wrapRect.top}px;">
     <div class="t-date">${fmtDate(entry.date)}</div>
-    <div class="t-sets">${entry.sets.map(s=>`${s.reps}×${s.weight}кг`).join(' · ')}</div>
+    <div class="t-sets">${entry.sets.map(s=>`${s.reps}×${s.weight}kg`).join(' · ')}</div>
   </div>`;
 });
 
+/* ===================== AUTH SCREEN ===================== */
+let authMode = 'signin'; // 'signin' | 'signup'
+let authError = '';
+let authBusy = false;
+
+function friendlyAuthError(code){
+  const map = {
+    'auth/invalid-email':'That email address looks invalid.',
+    'auth/user-not-found':'No account found with that email.',
+    'auth/wrong-password':'Incorrect password.',
+    'auth/invalid-credential':'Incorrect email or password.',
+    'auth/email-already-in-use':'An account with that email already exists.',
+    'auth/weak-password':'Password should be at least 6 characters.',
+    'auth/too-many-requests':'Too many attempts. Try again in a bit.',
+    'auth/network-request-failed':'Network error. Check your connection.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
+
+function renderAuthScreen(){
+  if(!FIREBASE_SDK_LOADED){
+    return `
+    <div class="auth-wrap">
+      <div class="auth-logo">${ICONS.dumbbell}</div>
+      <h1>Connection problem</h1>
+      <p class="auth-sub">The Firebase library couldn't load. Check your internet connection and reload the page. If this keeps happening, the network you're on may be blocking cdnjs.cloudflare.com.</p>
+      <button class="primary-btn" onclick="location.reload()">Reload</button>
+    </div>`;
+  }
+  if(!FIREBASE_CONFIGURED){
+    return `
+    <div class="auth-wrap">
+      <div class="auth-logo">${ICONS.dumbbell}</div>
+      <h1>Almost there</h1>
+      <p class="auth-sub">Firebase isn't connected yet, so your data can't sync across devices. Open the file, find the <span class="mono">firebaseConfig</span> section near the top of the script, and paste in your own project's config from the Firebase console.</p>
+      <div class="auth-hint">Firebase console → Project settings → Your apps → Web app config</div>
+    </div>`;
+  }
+  return `
+  <div class="auth-wrap">
+    <div class="auth-logo">${ICONS.dumbbell}</div>
+    <h1>Your Gym</h1>
+    <p class="auth-sub">Sign in to sync your exercises and progress across all your devices.</p>
+    <div class="auth-tabs">
+      <div class="auth-tab ${authMode==='signin'?'active':''}" data-action="auth-tab" data-mode="signin">Sign in</div>
+      <div class="auth-tab ${authMode==='signup'?'active':''}" data-action="auth-tab" data-mode="signup">Create account</div>
+    </div>
+    <div class="auth-error ${authError?'show':''}">${escapeHtml(authError)}</div>
+    <div class="input-group">
+      <label>Email</label>
+      <input class="text-input" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input class="text-input" id="auth-password" type="password" placeholder="At least 6 characters" autocomplete="${authMode==='signin'?'current-password':'new-password'}">
+    </div>
+    <button class="primary-btn" data-action="auth-submit" ${authBusy?'disabled':''}>${authBusy?'Please wait…':(authMode==='signin'?'Sign in':'Create account')}</button>
+    <div class="auth-hint">Your workouts are private and stored under your account only.</div>
+  </div>`;
+}
+
+function renderAuthOnly(){
+  document.getElementById('app').innerHTML = renderAuthScreen();
+  attachAuthHandlers();
+}
+
+function attachAuthHandlers(){
+  document.querySelectorAll('[data-action="auth-tab"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ authMode = el.dataset.mode; authError=''; renderAuthOnly(); });
+  });
+  const submitBtn = document.querySelector('[data-action="auth-submit"]');
+  if(submitBtn) submitBtn.addEventListener('click', handleAuthSubmit);
+  const pwInput = document.getElementById('auth-password');
+  if(pwInput) pwInput.addEventListener('keydown', e=>{ if(e.key==='Enter') handleAuthSubmit(); });
+}
+
+async function handleAuthSubmit(){
+  const email = (document.getElementById('auth-email').value||'').trim();
+  const password = document.getElementById('auth-password').value||'';
+  if(!email || !password){ authError='Please fill in both fields.'; renderAuthOnly(); return; }
+  authBusy = true; authError=''; renderAuthOnly();
+  try{
+    if(authMode==='signin') await auth.signInWithEmailAndPassword(email, password);
+    else await auth.createUserWithEmailAndPassword(email, password);
+    // onAuthStateChanged handles the rest
+  }catch(e){
+    authBusy = false;
+    authError = friendlyAuthError(e.code);
+    renderAuthOnly();
+  }
+}
+
 /* ===================== INIT ===================== */
-(async function init(){
-  document.getElementById('app').innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-dim);font-family:'Manrope',sans-serif;">Завантаження…</div>`;
-  await loadAll();
-  render();
+(function init(){
+  const appEl = document.getElementById('app');
+  if(!FIREBASE_SDK_LOADED || !FIREBASE_CONFIGURED){
+    renderAuthOnly();
+    return;
+  }
+  appEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-dim);font-family:'Hind Guntur',sans-serif;">Loading…</div>`;
+  auth.onAuthStateChanged(async user=>{
+    if(user){
+      currentUser = user;
+      appEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-dim);font-family:'Hind Guntur',sans-serif;">Loading your data…</div>`;
+      await cloudLoadAll();
+      state.screen='home';
+      render();
+    } else {
+      currentUser = null;
+      renderAuthOnly();
+    }
+  });
 })();
 </script>
 </body>
