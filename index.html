@@ -465,21 +465,27 @@ let pendingPhoto = null; // for add/edit exercise modal
 
 /* ===================== HELPERS ===================== */
 function uid(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36); }
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+function todayISO(){
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jerusalem'
+  }).format(new Date());
+}
 function fmtDate(iso){
   const d = new Date(iso+'T00:00:00');
   return d.toLocaleDateString('en-US', {day:'2-digit', month:'short'});
 }
-function mondayOf(iso){
-  const d = new Date(iso+'T00:00:00');
-  const day = (d.getDay()+6)%7; // Mon=0
-  d.setDate(d.getDate()-day);
-  return d.toISOString().slice(0,10);
+function sundayOf(iso){
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const dow = dt.getUTCDay();
+  const sun = new Date(Date.UTC(y, m - 1, d - dow, 12, 0, 0));
+  return sun.toISOString().slice(0, 10);
 }
+
 function addDays(iso, n){
-  const d = new Date(iso+'T00:00:00');
-  d.setDate(d.getDate()+n);
-  return d.toISOString().slice(0,10);
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + n, 12, 0, 0));
+  return dt.toISOString().slice(0, 10);
 }
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -493,44 +499,71 @@ function getExercise(exId){
 
 /* ===================== STREAK LOGIC ===================== */
 function computeStreak(){
-  const goal = DB.settings.weeklyGoal;
-  const days = [...new Set(DB.trainingDays)].sort();
-  if(days.length===0) return {streak:0, thisWeekCount:0, goal, weeks:[], thisWeekMet:false};
+  const goal        = Math.max(1, DB.settings.weeklyGoal);
+  const days        = [...new Set(DB.trainingDays)].sort();
+  const currentWeek = sundayOf(todayISO());
 
-  // bucket by week
+  if(days.length === 0){
+    return {
+      streak:0,
+      thisWeekCount:0,
+      goal:DB.settings.weeklyGoal,
+      weeks:[],
+      thisWeekMet:false
+    };
+  }
+
+  // Bucket by Sunday-anchored week; ignore future workouts
   const buckets = {};
-  days.forEach(d=>{
-    const wk = mondayOf(d);
-    (buckets[wk] = buckets[wk]||new Set()).add(d);
+  days.forEach(d => {
+    const wk = sundayOf(d);
+    if(wk > currentWeek) return;
+    (buckets[wk] = buckets[wk] || new Set()).add(d);
   });
 
-  const earliestWeek = mondayOf(days[0]);
-  const currentWeek = mondayOf(todayISO());
+  const thisWeekCount = buckets[currentWeek]
+    ? buckets[currentWeek].size
+    : 0;
 
-  // walk backward from week before current
+  const thisWeekMet = thisWeekCount >= goal;
+
+  // Walk backward from the current week counting consecutive completed weeks
   let streak = 0;
-  let cursor = addDays(currentWeek, -7);
+  let cursor = currentWeek;
+  const earliestWeek = sundayOf(days[0]);
+
   while(cursor >= earliestWeek){
-    const cnt = buckets[cursor] ? buckets[cursor].size : 0;
-    if(cnt >= Math.max(goal,1) || (goal===0)){
+    const cnt = buckets[cursor]
+      ? buckets[cursor].size
+      : 0;
+
+    if(cnt >= goal){
       streak++;
       cursor = addDays(cursor, -7);
-    } else break;
+    }else{
+      break;
+    }
   }
 
-  const thisWeekCount = buckets[currentWeek] ? buckets[currentWeek].size : 0;
-  const thisWeekMet = thisWeekCount >= Math.max(goal,1) || goal===0;
-
-  // last 8 weeks dots (oldest -> newest, excluding current)
+  // Last 8 completed (non-current) weeks for the dots UI
   const weeks = [];
-  for(let i=8;i>=1;i--){
-    const wk = addDays(currentWeek, -7*i);
-    if(wk < earliestWeek){ weeks.push(null); continue; }
-    const cnt = buckets[wk] ? buckets[wk].size : 0;
-    weeks.push(cnt >= Math.max(goal,1) || goal===0);
+
+  for(let i = 8; i >= 1; i--){
+    const wk = addDays(currentWeek, -7 * i);
+    const cnt = buckets[wk]
+      ? buckets[wk].size
+      : 0;
+
+    weeks.push(cnt >= goal);
   }
 
-  return {streak, thisWeekCount, goal, weeks, thisWeekMet};
+  return {
+    streak,
+    thisWeekCount,
+    goal:DB.settings.weeklyGoal,
+    weeks,
+    thisWeekMet
+  };
 }
 
 function levelFromStreak(streak){ return Math.max(0, Math.min(11, streak)); }
@@ -962,8 +995,7 @@ function renderStreakModal(){
   </div>`;
 }
 function weekWord(n){
-  const m = n%100;
-  return n===1 ? 'week' : 'weeks';
+  return n === 1 ? 'week' : 'weeks';
 }
 
 /* ===================== EVENT HANDLERS ===================== */
